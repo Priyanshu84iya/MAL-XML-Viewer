@@ -1,6 +1,7 @@
 import { useCallback, useRef, useEffect } from 'react';
 import type { AnimeEntry } from '../types';
-import { displayValue, STATUS_BG_CLASSES } from '../types';
+import { STATUS_BG_CLASSES } from '../types';
+import { displayValue } from '../utils';
 
 interface Props {
   anime: AnimeEntry[];

@@ -1,5 +1,6 @@
 import type { AnimeEntry } from '../types';
-import { displayValue, STATUS_BG_CLASSES, STATUS_COLORS } from '../types';
+import { STATUS_BG_CLASSES, STATUS_COLORS } from '../types';
+import { displayValue } from '../utils';
 
 interface Props {
   entry: AnimeEntry;
