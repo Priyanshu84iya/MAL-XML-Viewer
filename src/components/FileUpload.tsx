@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import type { MALData } from '../types';
 import { parseMALXml } from '../utils';
 
@@ -10,6 +10,7 @@ export default function FileUpload({ onDataLoaded }: Props) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const processFile = useCallback(
@@ -41,6 +42,22 @@ export default function FileUpload({ onDataLoaded }: Props) {
     [onDataLoaded],
   );
 
+  // Countdown effect
+  useEffect(() => {
+    if (countdown === null) return;
+    if (countdown < 0) {
+      window.open('https://myanimelist.net/panel.php?go=export', '_blank');
+      setCountdown(null);
+      return;
+    }
+    const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const handleMalExport = useCallback(() => {
+    setCountdown(3);
+  }, []);
+
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
@@ -61,6 +78,15 @@ export default function FileUpload({ onDataLoaded }: Props) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 noise-bg scanlines">
+      {/* MyAnimeList XML Button */}
+      <button
+        onClick={handleMalExport}
+        className="fixed top-4 right-4 px-4 py-2 bg-[#FFE500] text-black font-bold text-sm tracking-widest hover:bg-[#FFD700] transition-all border-2 border-[#FFE500] cursor-pointer"
+        disabled={countdown !== null}
+      >
+        {countdown !== null ? `OPENING... ${countdown}` : 'MyAnimeList XML'}
+      </button>
+
       {/* Giant heading */}
       <div className="text-center mb-12">
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter glitch-text mb-4">
